@@ -692,7 +692,7 @@ def genTasks = { target ->
     def _preferred_java_version = project.hasProperty("preferred-java-version") ? this.'preferred-java-version' : "8"
     def _mvn_cache_volume = project.hasProperty("mvn-cache-volume") ? this.'mvn-cache-volume' : ""
     def _docker_run_option = project.hasProperty("docker-run-option") ? this.'docker-run-option' : ""
-    def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version']
+    def additionalConfigKeys = ['git_repo', 'git_ref', 'git_dir', 'git_commit_hash', 'base_version', 'parentDir']
     additionalConfigKeys.each { key ->
       if (project.hasProperty(key)) {
         _target_pkg += " -P${key}=" + project.property(key)
