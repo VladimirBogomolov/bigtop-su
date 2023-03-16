@@ -22,5 +22,3 @@ jobs:
           package-name: 'bigtop-select'
           stack-name: 'dla'
           repo-dir: ${{ var.REPO_DIR }}
-        run: echo build complete
-
