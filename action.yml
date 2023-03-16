@@ -1,0 +1,29 @@
+name: 'rpm package'
+description:  'Build centos-7 package and push to local yum rep'
+inputs: 
+  package-name:
+    description: 'The name of bigtop package'
+    required: true
+    default: 'bigtop-select'
+  stack-name: 
+    description: 'The name of stack'
+    required: true
+    default: 'dla'
+  repo-dir: 
+    description: 'Repository directory on local host'
+    required: true
+    default: '/'
+runs:
+  using: "composite"
+  steps:
+    - name: Build rpm
+      run: |
+        /bin/bash gradlew ${{ inputs.package-name }}-clean
+        /bin/bash gradlew ${{ inputs.package-name }}-pkg-ind -POS=centos-7 -Pmvn-cache-volume=yes -PparentDir=/usr/${{ inputs.stack-name }} -Pdocker-run-option="-e BIGTOP_BUILD_STAMP=$(date +%s)"
+    - name: Copy file to yum Repo
+      run: |
+        mkdir -p ${{ inputs.repo-dir }}/${{ inputs.package-name }}
+        find output/${{ inputs.package-name }} -type d -path "/output/${{ inputs.package-name }}/*" -exec cp -rf {} ${{ inputs.repo-dir }}/${{ inputs.package-name }} \;
+    - name: Update yum Repo
+      run: createrepo --update ${{ inputs.repo-dir }}
+

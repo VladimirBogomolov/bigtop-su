@@ -1,0 +1,28 @@
+on:
+  push:
+    branches:
+      - master-arg
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [ self-hosted ]
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Set environment variables
+        run: |
+          GIT_BRANCH=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
+          echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_ENV
+      - name: Build rpm
+        run: |
+          /bin/bash gradlew bigtop-select-clean 
+          /bin/bash gradlew bigtop-select-pkg-ind -POS=centos-7 -Pmvn-cache-volume=yes -PparentDir=/usr/dla -Pdocker-run-option="-e BIGTOP_BUILD_STAMP=$(date +%s)"
+      - name: Copy file to yum Repo
+        run: |
+          mkdir -p ${{ vars.REPO_DIR }}/${GIT_BRANCH}/ambari/x86_64/
+          cp ambari-server/target/rpm/ambari-server/RPMS/x86_64/ambari-server-*.rpm ${{ vars.REPO_DIR }}/${GIT_BRANCH}/ambari/x86_64/
+          cp ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/ambari-agent-*.rpm ${{ vars.REPO_DIR }}/${GIT_BRANCH}/ambari/x86_64/
+      - name: Update yum Repo
+        run: createrepo --update ${{ vars.REPO_DIR }}/${GIT_BRANCH}
+
