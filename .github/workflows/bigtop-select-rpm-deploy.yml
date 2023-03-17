@@ -21,4 +21,4 @@ jobs:
         with:
           package-name: 'bigtop-select'
           stack-name: 'dla'
-          repo-dir: ${{ var.REPO_DIR }}
+          repo-dir: ${{ vars.REPO_DIR }}
