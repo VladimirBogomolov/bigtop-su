@@ -17,7 +17,7 @@ jobs:
           GIT_BRANCH=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
           echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_ENV
       - name: Build and deploy rpm
-        uses: actions/bigtop-su@d24dfc41a63f42fb51b1b407938f7d615f9bb127
+        uses: actions/bigtop-su@f26741798111b04d70832645593992952fa7dcd2
         with:
           package-name: 'bigtop-select'
           stack-name: 'dla'
