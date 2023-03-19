@@ -25,7 +25,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ inputs.repo-dir }}/${{ inputs.stack-name }}/${{ inputs.package-name }}
-        find output/${{ inputs.package-name }} -type d -path "/output/${{ inputs.package-name }}/*" -exec cp -rf {} ${{ inputs.repo-dir }}/${{ inputs.stack-name }}/${{ inputs.package-name }} \;
+        find output/${{ inputs.package-name }} -type d -path "output/${{ inputs.package-name }}/*" -exec cp -rf {} ${{ inputs.repo-dir }}/${{ inputs.stack-name }}/${{ inputs.package-name }} \;
     - name: Update yum Repo
       run: createrepo --update ${{ inputs.repo-dir }}/${{ inputs.stack-name }}
       shell: bash
