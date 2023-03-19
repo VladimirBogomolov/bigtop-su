@@ -17,13 +17,16 @@ runs:
   using: "composite"
   steps:
     - name: Build rpm
+      shell: bash
       run: |
         /bin/bash gradlew ${{ inputs.package-name }}-clean
         /bin/bash gradlew ${{ inputs.package-name }}-pkg-ind -POS=centos-7 -Pmvn-cache-volume=yes -PparentDir=/usr/${{ inputs.stack-name }} -Pdocker-run-option="-e BIGTOP_BUILD_STAMP=$(date +%s)"
     - name: Copy file to yum Repo
+      shell: bash
       run: |
         mkdir -p ${{ inputs.repo-dir }}/${{ inputs.stack-name }}/${{ inputs.package-name }}
         find output/${{ inputs.package-name }} -type d -path "/output/${{ inputs.package-name }}/*" -exec cp -rf {} ${{ inputs.repo-dir }}/${{ inputs.stack-name }}/${{ inputs.package-name }} \;
     - name: Update yum Repo
       run: createrepo --update ${{ inputs.repo-dir }}/${{ inputs.stack-name }}
+      shell: bash
 
